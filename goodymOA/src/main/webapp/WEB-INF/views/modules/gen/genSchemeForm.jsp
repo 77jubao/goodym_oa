@@ -55,7 +55,7 @@
 			<label class="control-label">生成包路径:</label>
 			<div class="controls">
 				<form:input path="packageName" htmlEscape="false" maxlength="500" class="required input-xlarge"/>
-				<span class="help-inline">建议模块包：com.thinkgem.jeesite.modules</span>
+				<span class="help-inline">建议模块包：cn.goodym.java.modules</span>
 			</div>
 		</div>
 		<div class="control-group">

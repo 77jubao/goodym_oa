@@ -11,7 +11,7 @@
 	<context:property-placeholder ignore-unresolvable="true" location="classpath:jeesite.properties" />
 	
 	<!-- 使用Annotation自动注册Bean,只扫描@Controller -->
-	<context:component-scan base-package="com.thinkgem.jeesite" use-default-filters="false"><!-- base-package 如果多个，用“,”分隔 -->
+	<context:component-scan base-package="cn.goodym.java" use-default-filters="false"><!-- base-package 如果多个，用“,”分隔 -->
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 	</context:component-scan>
     
@@ -29,7 +29,7 @@
                 </property>
                 <property name="prettyPrint" value="false"/>
                 <property name="objectMapper">  
-                    <bean class="com.thinkgem.jeesite.common.mapper.JsonMapper"></bean>  
+                    <bean class="cn.goodym.java.common.mapper.JsonMapper"></bean>  
                 </property> 
             </bean>
             <!-- 使用XML格式输出数据 -->
@@ -41,10 +41,10 @@
 				        </property>
 				        <property name="annotatedClasses">
 				            <list>
-				                <value>com.thinkgem.jeesite.common.persistence.BaseEntity</value>
-				                <value>com.thinkgem.jeesite.common.supcan.treelist.TreeList</value>
-				                <value>com.thinkgem.jeesite.common.supcan.treelist.cols.Col</value>
-				                <value>com.thinkgem.jeesite.common.supcan.treelist.cols.Group</value>
+				                <value>cn.goodym.java.common.persistence.BaseEntity</value>
+				                <value>cn.goodym.java.common.supcan.treelist.TreeList</value>
+				                <value>cn.goodym.java.common.supcan.treelist.cols.Col</value>
+				                <value>cn.goodym.java.common.supcan.treelist.cols.Group</value>
 				            </list>
 				        </property>
 				    </bean>
@@ -90,12 +90,12 @@
 			<mvc:exclude-mapping path="${adminPath}/sys/menu/tree"/>
 			<mvc:exclude-mapping path="${adminPath}/sys/menu/treeData"/>
 			<mvc:exclude-mapping path="${adminPath}/oa/oaNotify/self/count"/>
-			<bean class="com.thinkgem.jeesite.modules.sys.interceptor.LogInterceptor" />
+			<bean class="cn.goodym.java.modules.sys.interceptor.LogInterceptor" />
 		</mvc:interceptor>
 		<!-- 手机视图拦截器 -->
 		<mvc:interceptor>
 			<mvc:mapping path="/**" />
-			<bean class="com.thinkgem.jeesite.modules.sys.interceptor.MobileInterceptor" />
+			<bean class="cn.goodym.java.modules.sys.interceptor.MobileInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>
 	

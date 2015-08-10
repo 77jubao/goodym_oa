@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.thinkgem.jeesite.modules.oa.dao.OaNotifyDao">
+<mapper namespace="cn.goodym.java.modules.oa.dao.OaNotifyDao">
     
 	<sql id="oaNotifyColumns">
 		a.ID AS "id",

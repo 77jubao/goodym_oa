@@ -1,5 +1,5 @@
 <%@page import="java.io.File"%>
-<%@page import="com.thinkgem.jeesite.common.utils.ImageGeo"%>
+<%@page import="cn.goodym.java.common.utils.ImageGeo"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"%>
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <!DOCTYPE html>

@@ -41,12 +41,12 @@
 	
 	<!-- 类型别名 -->
 	<typeAliases>
-		<typeAlias alias="Page" type="com.thinkgem.jeesite.common.persistence.Page" /><!--分页  -->
+		<typeAlias alias="Page" type="cn.goodym.java.common.persistence.Page" /><!--分页  -->
 	</typeAliases>
 	
 	<!-- 插件配置 -->
 	<plugins>
-		<plugin interceptor="com.thinkgem.jeesite.common.persistence.interceptor.PaginationInterceptor" />
+		<plugin interceptor="cn.goodym.java.common.persistence.interceptor.PaginationInterceptor" />
     </plugins>
 	
 </configuration>

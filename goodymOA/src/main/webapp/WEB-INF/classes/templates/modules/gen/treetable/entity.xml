@@ -13,7 +13,7 @@ package ${packageName}.${moduleName}.entity<#if subModuleName != "">.${subModule
 import ${i};
 </#list>
 
-import com.thinkgem.jeesite.common.persistence.TreeEntity;
+import cn.goodym.java.common.persistence.TreeEntity;
 
 /**
  * ${functionName}Entity

@@ -44,9 +44,9 @@
 		<dict value="Integer" label="Integer"/>
 		<dict value="Double" label="Double"/>
 		<dict value="java.util.Date" label="Date"/>
-		<dict value="com.thinkgem.jeesite.modules.sys.entity.User" label="User"/>
-		<dict value="com.thinkgem.jeesite.modules.sys.entity.Office" label="Office"/>
-		<dict value="com.thinkgem.jeesite.modules.sys.entity.Area" label="Area"/>
+		<dict value="cn.goodym.java.modules.sys.entity.User" label="User"/>
+		<dict value="cn.goodym.java.modules.sys.entity.Office" label="Office"/>
+		<dict value="cn.goodym.java.modules.sys.entity.Area" label="Area"/>
 		<dict value="This" label="ThisObj" description="生成当前对象"/>
 		<dict value="Custom" label="Custom" description="自定义对象，生成后手动设置"/>
 	</javaType>

@@ -73,7 +73,7 @@
       "id" : "process_namespace",
       "type" : "String",
       "title" : "目标命名空间",
-      "value" : "com.thinkgem.jeesite.act",
+      "value" : "cn.goodym.java.act",
       "description" : "流程定义的命名空间名称.",
       "popular" : false
     } ]
