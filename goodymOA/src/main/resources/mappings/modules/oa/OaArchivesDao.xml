@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.goodym.java.modules.oa.dao.OaArchivesDao">
+    
+	<sql id="oaArchivesColumns">
+		a.id AS "id",
+		a.archives_no AS "archivesNo",
+		a.true_name AS "trueName",
+		a.sex AS "sex",
+		a.entry_date AS "entryDate",
+		a.status AS "status",
+		a.company_id AS "company",
+		a.office_id AS "office.id",
+		a.position AS "position",
+		a.id_card AS "idCard",
+		a.birth_date AS "birthDate",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		o8.name AS "office.name"
+	</sql>
+	
+	<sql id="oaArchivesJoins">
+		LEFT JOIN sys_office o8 ON o8.id = a.office_id
+	</sql>
+    
+	<select id="get" resultType="OaArchives">
+		SELECT 
+			<include refid="oaArchivesColumns"/>
+		FROM oa_archives a
+		<include refid="oaArchivesJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OaArchives">
+		SELECT 
+			<include refid="oaArchivesColumns"/>
+		FROM oa_archives a
+		<include refid="oaArchivesJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="archivesNo != null and archivesNo != ''">
+				AND a.archives_no = #{archivesNo}
+			</if>
+			<if test="trueName != null and trueName != ''">
+				AND a.true_name = #{trueName}
+			</if>
+			<if test="sex != null and sex != ''">
+				AND a.sex = #{sex}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="company != null and company != ''">
+				AND a.company_id = #{company}
+			</if>
+			<if test="office != null and office.id != null and office.id != ''">
+				AND a.office_id = #{office.id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OaArchives">
+		SELECT 
+			<include refid="oaArchivesColumns"/>
+		FROM oa_archives a
+		<include refid="oaArchivesJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO oa_archives(
+			id,
+			archives_no,
+			true_name,
+			sex,
+			entry_date,
+			status,
+			company_id,
+			office_id,
+			position,
+			id_card,
+			birth_date,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{archivesNo},
+			#{trueName},
+			#{sex},
+			#{entryDate},
+			#{status},
+			#{company},
+			#{office.id},
+			#{position},
+			#{idCard},
+			#{birthDate},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE oa_archives SET 	
+			archives_no = #{archivesNo},
+			true_name = #{trueName},
+			sex = #{sex},
+			entry_date = #{entryDate},
+			status = #{status},
+			company_id = #{company},
+			office_id = #{office.id},
+			position = #{position},
+			id_card = #{idCard},
+			birth_date = #{birthDate},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE oa_archives SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
