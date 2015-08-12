@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.goodym.java.modules.oa.dao.OaCarDao">
+    
+	<sql id="oaCarColumns">
+		a.id AS "id",
+		a.car_number AS "carNumber",
+		a.brand_type AS "brandType",
+		a.car_type AS "carType",
+		a.car_colour AS "carColour",
+		a.hold_number AS "holdNumber",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="oaCarJoins">
+	</sql>
+    
+	<select id="get" resultType="OaCar">
+		SELECT 
+			<include refid="oaCarColumns"/>
+		FROM oa_car a
+		<include refid="oaCarJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OaCar">
+		SELECT 
+			<include refid="oaCarColumns"/>
+		FROM oa_car a
+		<include refid="oaCarJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="carNumber != null and carNumber != ''">
+				AND a.car_number = #{carNumber}
+			</if>
+			<if test="brandType != null and brandType != ''">
+				AND a.brand_type = #{brandType}
+			</if>
+			<if test="carType != null and carType != ''">
+				AND a.car_type = #{carType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OaCar">
+		SELECT 
+			<include refid="oaCarColumns"/>
+		FROM oa_car a
+		<include refid="oaCarJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO oa_car(
+			id,
+			car_number,
+			brand_type,
+			car_type,
+			car_colour,
+			hold_number,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{carNumber},
+			#{brandType},
+			#{carType},
+			#{carColour},
+			#{holdNumber},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE oa_car SET 	
+			car_number = #{carNumber},
+			brand_type = #{brandType},
+			car_type = #{carType},
+			car_colour = #{carColour},
+			hold_number = #{holdNumber},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE oa_car SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

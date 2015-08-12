@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.goodym.java.modules.oa.dao.OaRoomDao">
+    
+	<sql id="oaRoomColumns">
+		a.id AS "id",
+		a.room_name AS "roomName",
+		a.hold_number AS "holdNumber",
+		a.room_equipment AS "roomEquipment",
+		a.room_addr AS "roomAddr",
+		a.status AS "status",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="oaRoomJoins">
+	</sql>
+    
+	<select id="get" resultType="OaRoom">
+		SELECT 
+			<include refid="oaRoomColumns"/>
+		FROM oa_room a
+		<include refid="oaRoomJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OaRoom">
+		SELECT 
+			<include refid="oaRoomColumns"/>
+		FROM oa_room a
+		<include refid="oaRoomJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="roomName != null and roomName != ''">
+				AND a.room_name = #{roomName}
+			</if>
+			<if test="holdNumber != null and holdNumber != ''">
+				AND a.hold_number = #{holdNumber}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OaRoom">
+		SELECT 
+			<include refid="oaRoomColumns"/>
+		FROM oa_room a
+		<include refid="oaRoomJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO oa_room(
+			id,
+			room_name,
+			hold_number,
+			room_equipment,
+			room_addr,
+			status,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{roomName},
+			#{holdNumber},
+			#{roomEquipment},
+			#{roomAddr},
+			#{status},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE oa_room SET 	
+			room_name = #{roomName},
+			hold_number = #{holdNumber},
+			room_equipment = #{roomEquipment},
+			room_addr = #{roomAddr},
+			status = #{status},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE oa_room SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
