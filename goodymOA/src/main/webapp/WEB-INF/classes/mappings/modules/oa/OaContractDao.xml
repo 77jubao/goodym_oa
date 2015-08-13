@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.goodym.java.modules.oa.dao.OaContractDao">
+    
+	<sql id="oaContractColumns">
+		a.id AS "id",
+		a.contract_no AS "contractNo",
+		a.true_name AS "trueName",
+		a.is_try_out AS "isTryOut",
+		a.try_out_date AS "tryOutDate",
+		a.is_regular AS "isRegular",
+		a.regular_date AS "regularDate",
+		a.is_positive AS "isPositive",
+		a.positive_date AS "positiveDate",
+		a.is_remove AS "isRemove",
+		a.remove_date AS "removeDate",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="oaContractJoins">
+	</sql>
+    
+	<select id="get" resultType="OaContract">
+		SELECT 
+			<include refid="oaContractColumns"/>
+		FROM oa_contract a
+		<include refid="oaContractJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OaContract">
+		SELECT 
+			<include refid="oaContractColumns"/>
+		FROM oa_contract a
+		<include refid="oaContractJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="contractNo != null and contractNo != ''">
+				AND a.contract_no = #{contractNo}
+			</if>
+			<if test="trueName != null and trueName != ''">
+				AND a.true_name = #{trueName}
+			</if>
+			<if test="isTryOut != null and isTryOut != ''">
+				AND a.is_try_out = #{isTryOut}
+			</if>
+			<if test="isRegular != null and isRegular != ''">
+				AND a.is_regular = #{isRegular}
+			</if>
+			<if test="isPositive != null and isPositive != ''">
+				AND a.is_positive = #{isPositive}
+			</if>
+			<if test="isRemove != null and isRemove != ''">
+				AND a.is_remove = #{isRemove}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OaContract">
+		SELECT 
+			<include refid="oaContractColumns"/>
+		FROM oa_contract a
+		<include refid="oaContractJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO oa_contract(
+			id,
+			contract_no,
+			true_name,
+			is_try_out,
+			try_out_date,
+			is_regular,
+			regular_date,
+			is_positive,
+			positive_date,
+			is_remove,
+			remove_date,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{contractNo},
+			#{trueName},
+			#{isTryOut},
+			#{tryOutDate},
+			#{isRegular},
+			#{regularDate},
+			#{isPositive},
+			#{positiveDate},
+			#{isRemove},
+			#{removeDate},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE oa_contract SET 	
+			contract_no = #{contractNo},
+			true_name = #{trueName},
+			is_try_out = #{isTryOut},
+			try_out_date = #{tryOutDate},
+			is_regular = #{isRegular},
+			regular_date = #{regularDate},
+			is_positive = #{isPositive},
+			positive_date = #{positiveDate},
+			is_remove = #{isRemove},
+			remove_date = #{removeDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE oa_contract SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
