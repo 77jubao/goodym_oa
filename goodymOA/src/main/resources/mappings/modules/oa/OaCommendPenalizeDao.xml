@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.goodym.java.modules.oa.dao.OaCommendPenalizeDao">
+    
+	<sql id="oaCommendPenalizeColumns">
+		a.id AS "id",
+		a.archives_no AS "archivesNo",
+		a.true_name AS "trueName",
+		a.office_id AS "office.id",
+		a.jc_type AS "jcType",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.money AS "money",
+		a.cmonth AS "cmonth",
+		o4.name AS "office.name"
+	</sql>
+	
+	<sql id="oaCommendPenalizeJoins">
+		LEFT JOIN sys_office o4 ON o4.id = a.office_id
+	</sql>
+    
+	<select id="get" resultType="OaCommendPenalize">
+		SELECT 
+			<include refid="oaCommendPenalizeColumns"/>
+		FROM oa_commend_penalize a
+		<include refid="oaCommendPenalizeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OaCommendPenalize">
+		SELECT 
+			<include refid="oaCommendPenalizeColumns"/>
+		FROM oa_commend_penalize a
+		<include refid="oaCommendPenalizeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="archivesNo != null and archivesNo != ''">
+				AND a.archives_no = #{archivesNo}
+			</if>
+			<if test="trueName != null and trueName != ''">
+				AND a.true_name = #{trueName}
+			</if>
+			<if test="office != null and office.id != null and office.id != ''">
+				AND a.office_id = #{office.id}
+			</if>
+			<if test="jcType != null and jcType != ''">
+				AND a.jc_type = #{jcType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OaCommendPenalize">
+		SELECT 
+			<include refid="oaCommendPenalizeColumns"/>
+		FROM oa_commend_penalize a
+		<include refid="oaCommendPenalizeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO oa_commend_penalize(
+			id,
+			archives_no,
+			true_name,
+			office_id,
+			jc_type,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			money,
+			cmonth
+		) VALUES (
+			#{id},
+			#{archivesNo},
+			#{trueName},
+			#{office.id},
+			#{jcType},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{money},
+			#{cmonth}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE oa_commend_penalize SET 	
+			archives_no = #{archivesNo},
+			true_name = #{trueName},
+			office_id = #{office.id},
+			jc_type = #{jcType},
+			remarks = #{remarks},
+			money = #{money},
+			cmonth = #{cmonth}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE oa_commend_penalize SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
