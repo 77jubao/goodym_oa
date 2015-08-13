@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.goodym.java.modules.oa.dao.OaTrainDao">
+    
+	<sql id="oaTrainColumns">
+		a.id AS "id",
+		a.archives_no AS "archivesNo",
+		a.true_name AS "trueName",
+		a.money AS "money",
+		a.start_date AS "startDate",
+		a.end_date AS "endDate",
+		a.training_institutions AS "trainingInstitutions",
+		a.course_locations AS "courseLocations",
+		a.training_content AS "trainingContent",
+		a.certificate AS "certificate",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="oaTrainJoins">
+	</sql>
+    
+	<select id="get" resultType="OaTrain">
+		SELECT 
+			<include refid="oaTrainColumns"/>
+		FROM oa_train a
+		<include refid="oaTrainJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OaTrain">
+		SELECT 
+			<include refid="oaTrainColumns"/>
+		FROM oa_train a
+		<include refid="oaTrainJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="archivesNo != null and archivesNo != ''">
+				AND a.archives_no = #{archivesNo}
+			</if>
+			<if test="trueName != null and trueName != ''">
+				AND a.true_name = #{trueName}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OaTrain">
+		SELECT 
+			<include refid="oaTrainColumns"/>
+		FROM oa_train a
+		<include refid="oaTrainJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO oa_train(
+			id,
+			archives_no,
+			true_name,
+			money,
+			start_date,
+			end_date,
+			training_institutions,
+			course_locations,
+			training_content,
+			certificate,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{archivesNo},
+			#{trueName},
+			#{money},
+			#{startDate},
+			#{endDate},
+			#{trainingInstitutions},
+			#{courseLocations},
+			#{trainingContent},
+			#{certificate},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE oa_train SET 	
+			archives_no = #{archivesNo},
+			true_name = #{trueName},
+			money = #{money},
+			start_date = #{startDate},
+			end_date = #{endDate},
+			training_institutions = #{trainingInstitutions},
+			course_locations = #{courseLocations},
+			training_content = #{trainingContent},
+			certificate = #{certificate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE oa_train SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
