@@ -4,9 +4,7 @@
 	<filePath>src/main/java/${packageName}/${moduleName}/web/${subModuleName}</filePath>
 	<fileName>${ClassName}Controller.java</fileName>
 	<content><![CDATA[
-/**
- * Copyright &copy; 2012-2014 <a href="https://github.com/thinkgem/jeesite">JeeSite</a> All rights reserved.
- */
+
 package ${packageName}.${moduleName}.web<#if subModuleName != "">.${subModuleName}</#if>;
 
 import javax.servlet.http.HttpServletRequest;
