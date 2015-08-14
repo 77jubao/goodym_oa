@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.goodym.java.modules.oa.dao.OaLeavesDao">
+    
+	<sql id="oaLeavesColumns">
+		a.id AS "id",
+		a.true_name AS "trueName",
+		a.office_id AS "office.id",
+		a.leave_type AS "leaveType",
+		a.leave_date AS "leaveDate",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.hour_total AS "hourTotal",
+		a.leave_status AS "leaveStatus",
+		a.leave_cause AS "leaveCause",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		o3.name AS "office.name"
+	</sql>
+	
+	<sql id="oaLeavesJoins">
+		LEFT JOIN sys_office o3 ON o3.id = a.office_id
+	</sql>
+    
+	<select id="get" resultType="OaLeaves">
+		SELECT 
+			<include refid="oaLeavesColumns"/>
+		FROM oa_leaves a
+		<include refid="oaLeavesJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OaLeaves">
+		SELECT 
+			<include refid="oaLeavesColumns"/>
+		FROM oa_leaves a
+		<include refid="oaLeavesJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="trueName != null and trueName != ''">
+				AND a.true_name = #{trueName}
+			</if>
+			<if test="office != null and office.id != null and office.id != ''">
+				AND a.office_id = #{office.id}
+			</if>
+			<if test="leaveType != null and leaveType != ''">
+				AND a.leave_type = #{leaveType}
+			</if>
+			<if test="leaveStatus != null and leaveStatus != ''">
+				AND a.leave_status = #{leaveStatus}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OaLeaves">
+		SELECT 
+			<include refid="oaLeavesColumns"/>
+		FROM oa_leaves a
+		<include refid="oaLeavesJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO oa_leaves(
+			id,
+			true_name,
+			office_id,
+			leave_type,
+			leave_date,
+			start_time,
+			end_time,
+			hour_total,
+			leave_status,
+			leave_cause,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{trueName},
+			#{office.id},
+			#{leaveType},
+			#{leaveDate},
+			#{startTime},
+			#{endTime},
+			#{hourTotal},
+			#{leaveStatus},
+			#{leaveCause},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE oa_leaves SET 	
+			true_name = #{trueName},
+			office_id = #{office.id},
+			leave_type = #{leaveType},
+			leave_date = #{leaveDate},
+			start_time = #{startTime},
+			end_time = #{endTime},
+			hour_total = #{hourTotal},
+			leave_status = #{leaveStatus},
+			leave_cause = #{leaveCause},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE oa_leaves SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

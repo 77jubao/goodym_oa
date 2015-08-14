@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.goodym.java.modules.oa.dao.OaOvertimeDao">
+    
+	<sql id="oaOvertimeColumns">
+		a.id AS "id",
+		a.true_name AS "trueName",
+		a.office_id AS "office.id",
+		a.overtime_type AS "overtimeType",
+		a.overtime_date AS "overtimeDate",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.hour_total AS "hourTotal",
+		a.change_type AS "changeType",
+		a.change_hour AS "changeHour",
+		a.expired_date AS "expiredDate",
+		a.overtime_status AS "overtimeStatus",
+		a.reason AS "reason",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		o3.name AS "office.name"
+	</sql>
+	
+	<sql id="oaOvertimeJoins">
+		LEFT JOIN sys_office o3 ON o3.id = a.office_id
+	</sql>
+    
+	<select id="get" resultType="OaOvertime">
+		SELECT 
+			<include refid="oaOvertimeColumns"/>
+		FROM oa_overtime a
+		<include refid="oaOvertimeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OaOvertime">
+		SELECT 
+			<include refid="oaOvertimeColumns"/>
+		FROM oa_overtime a
+		<include refid="oaOvertimeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="trueName != null and trueName != ''">
+				AND a.true_name = #{trueName}
+			</if>
+			<if test="office != null and office.id != null and office.id != ''">
+				AND a.office_id = #{office.id}
+			</if>
+			<if test="overtimeType != null and overtimeType != ''">
+				AND a.overtime_type = #{overtimeType}
+			</if>
+			<if test="changeType != null and changeType != ''">
+				AND a.change_type = #{changeType}
+			</if>
+			<if test="overtimeStatus != null and overtimeStatus != ''">
+				AND a.overtime_status = #{overtimeStatus}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OaOvertime">
+		SELECT 
+			<include refid="oaOvertimeColumns"/>
+		FROM oa_overtime a
+		<include refid="oaOvertimeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO oa_overtime(
+			id,
+			true_name,
+			office_id,
+			overtime_type,
+			overtime_date,
+			start_time,
+			end_time,
+			hour_total,
+			change_type,
+			change_hour,
+			expired_date,
+			overtime_status,
+			reason,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{trueName},
+			#{office.id},
+			#{overtimeType},
+			#{overtimeDate},
+			#{startTime},
+			#{endTime},
+			#{hourTotal},
+			#{changeType},
+			#{changeHour},
+			#{expiredDate},
+			#{overtimeStatus},
+			#{reason},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE oa_overtime SET 	
+			true_name = #{trueName},
+			office_id = #{office.id},
+			overtime_type = #{overtimeType},
+			overtime_date = #{overtimeDate},
+			start_time = #{startTime},
+			end_time = #{endTime},
+			hour_total = #{hourTotal},
+			change_type = #{changeType},
+			change_hour = #{changeHour},
+			expired_date = #{expiredDate},
+			overtime_status = #{overtimeStatus},
+			reason = #{reason},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE oa_overtime SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

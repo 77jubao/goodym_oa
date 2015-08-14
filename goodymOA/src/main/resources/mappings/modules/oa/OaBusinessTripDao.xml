@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.goodym.java.modules.oa.dao.OaBusinessTripDao">
+    
+	<sql id="oaBusinessTripColumns">
+		a.id AS "id",
+		a.true_name AS "trueName",
+		a.office_id AS "office.id",
+		a.business_type AS "businessType",
+		a.business_date AS "businessDate",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.hour_total AS "hourTotal",
+		a.change_type AS "changeType",
+		a.change_hour AS "changeHour",
+		a.expired_date AS "expiredDate",
+		a.business_status AS "businessStatus",
+		a.reason AS "reason",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		o3.name AS "office.name"
+	</sql>
+	
+	<sql id="oaBusinessTripJoins">
+		LEFT JOIN sys_office o3 ON o3.id = a.office_id
+	</sql>
+    
+	<select id="get" resultType="OaBusinessTrip">
+		SELECT 
+			<include refid="oaBusinessTripColumns"/>
+		FROM oa_business_trip a
+		<include refid="oaBusinessTripJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OaBusinessTrip">
+		SELECT 
+			<include refid="oaBusinessTripColumns"/>
+		FROM oa_business_trip a
+		<include refid="oaBusinessTripJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="trueName != null and trueName != ''">
+				AND a.true_name = #{trueName}
+			</if>
+			<if test="office != null and office.id != null and office.id != ''">
+				AND a.office_id = #{office.id}
+			</if>
+			<if test="changeType != null and changeType != ''">
+				AND a.change_type = #{changeType}
+			</if>
+			<if test="businessStatus != null and businessStatus != ''">
+				AND a.business_status = #{businessStatus}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OaBusinessTrip">
+		SELECT 
+			<include refid="oaBusinessTripColumns"/>
+		FROM oa_business_trip a
+		<include refid="oaBusinessTripJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO oa_business_trip(
+			id,
+			true_name,
+			office_id,
+			business_type,
+			business_date,
+			start_time,
+			end_time,
+			hour_total,
+			change_type,
+			change_hour,
+			expired_date,
+			business_status,
+			reason,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{trueName},
+			#{office.id},
+			#{businessType},
+			#{businessDate},
+			#{startTime},
+			#{endTime},
+			#{hourTotal},
+			#{changeType},
+			#{changeHour},
+			#{expiredDate},
+			#{businessStatus},
+			#{reason},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE oa_business_trip SET 	
+			true_name = #{trueName},
+			office_id = #{office.id},
+			business_type = #{businessType},
+			business_date = #{businessDate},
+			start_time = #{startTime},
+			end_time = #{endTime},
+			hour_total = #{hourTotal},
+			change_type = #{changeType},
+			change_hour = #{changeHour},
+			expired_date = #{expiredDate},
+			business_status = #{businessStatus},
+			reason = #{reason},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE oa_business_trip SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
