@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.goodym.java.modules.oa.dao.OaPleaseFundsDao">
+    
+	<sql id="oaPleaseFundsColumns">
+		a.id AS "id",
+		a.please_number AS "pleaseNumber",
+		a.office_id AS "office.id",
+		a.budget_subject_id AS "budgetSubjectId",
+		a.fee_subject_id AS "feeSubjectId",
+		a.please_date AS "pleaseDate",
+		a.please_name AS "pleaseName",
+		a.play_type AS "playType",
+		a.play_reason AS "playReason",
+		a.play_money AS "playMoney",
+		a.company_name AS "companyName",
+		a.play_status AS "playStatus",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		o3.name AS "office.name"
+	</sql>
+	
+	<sql id="oaPleaseFundsJoins">
+		LEFT JOIN sys_office o3 ON o3.id = a.office_id
+		LEFT JOIN sys_user u7 ON u7.id = a.please_name
+	</sql>
+    
+	<select id="get" resultType="OaPleaseFunds">
+		SELECT 
+			<include refid="oaPleaseFundsColumns"/>
+		FROM oa_please_funds a
+		<include refid="oaPleaseFundsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OaPleaseFunds">
+		SELECT 
+			<include refid="oaPleaseFundsColumns"/>
+		FROM oa_please_funds a
+		<include refid="oaPleaseFundsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="pleaseNumber != null and pleaseNumber != ''">
+				AND a.please_number = #{pleaseNumber}
+			</if>
+			<if test="office != null and office.id != null and office.id != ''">
+				AND a.office_id = #{office.id}
+			</if>
+			<if test="budgetSubjectId != null and budgetSubjectId != ''">
+				AND a.budget_subject_id = #{budgetSubjectId}
+			</if>
+			<if test="feeSubjectId != null and feeSubjectId != ''">
+				AND a.fee_subject_id = #{feeSubjectId}
+			</if>
+			<if test="pleaseName != null and pleaseName != ''">
+				AND a.please_name = #{pleaseName}
+			</if>
+			<if test="playType != null and playType != ''">
+				AND a.play_type = #{playType}
+			</if>
+			<if test="playStatus != null and playStatus != ''">
+				AND a.play_status = #{playStatus}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OaPleaseFunds">
+		SELECT 
+			<include refid="oaPleaseFundsColumns"/>
+		FROM oa_please_funds a
+		<include refid="oaPleaseFundsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO oa_please_funds(
+			id,
+			please_number,
+			office_id,
+			budget_subject_id,
+			fee_subject_id,
+			please_date,
+			please_name,
+			play_type,
+			play_reason,
+			play_money,
+			company_name,
+			play_status,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{pleaseNumber},
+			#{office.id},
+			#{budgetSubjectId},
+			#{feeSubjectId},
+			#{pleaseDate},
+			#{pleaseName},
+			#{playType},
+			#{playReason},
+			#{playMoney},
+			#{companyName},
+			#{playStatus},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE oa_please_funds SET 	
+			please_number = #{pleaseNumber},
+			office_id = #{office.id},
+			budget_subject_id = #{budgetSubjectId},
+			fee_subject_id = #{feeSubjectId},
+			please_date = #{pleaseDate},
+			please_name = #{pleaseName},
+			play_type = #{playType},
+			play_reason = #{playReason},
+			play_money = #{playMoney},
+			company_name = #{companyName},
+			play_status = #{playStatus},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE oa_please_funds SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
