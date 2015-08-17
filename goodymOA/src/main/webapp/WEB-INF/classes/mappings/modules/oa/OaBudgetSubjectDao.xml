@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.goodym.java.modules.oa.dao.OaBudgetSubjectDao">
+    
+	<sql id="oaBudgetSubjectColumns">
+		a.id AS "id",
+		a.subject_code AS "subjectCode",
+		a.subject_name AS "subjectName",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="oaBudgetSubjectJoins">
+	</sql>
+    
+	<select id="get" resultType="OaBudgetSubject">
+		SELECT 
+			<include refid="oaBudgetSubjectColumns"/>
+		FROM oa_budget_subject a
+		<include refid="oaBudgetSubjectJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OaBudgetSubject">
+		SELECT 
+			<include refid="oaBudgetSubjectColumns"/>
+		FROM oa_budget_subject a
+		<include refid="oaBudgetSubjectJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="subjectCode != null and subjectCode != ''">
+				AND a.subject_code = #{subjectCode}
+			</if>
+			<if test="subjectName != null and subjectName != ''">
+				AND a.subject_name = #{subjectName}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OaBudgetSubject">
+		SELECT 
+			<include refid="oaBudgetSubjectColumns"/>
+		FROM oa_budget_subject a
+		<include refid="oaBudgetSubjectJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO oa_budget_subject(
+			id,
+			subject_code,
+			subject_name,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{subjectCode},
+			#{subjectName},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE oa_budget_subject SET 	
+			subject_code = #{subjectCode},
+			subject_name = #{subjectName},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE oa_budget_subject SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

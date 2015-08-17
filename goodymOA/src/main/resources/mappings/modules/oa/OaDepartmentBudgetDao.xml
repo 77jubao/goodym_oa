@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.goodym.java.modules.oa.dao.OaDepartmentBudgetDao">
+    
+	<sql id="oaDepartmentBudgetColumns">
+		a.id AS "id",
+		a.office_id AS "office.id",
+		a.budget_subject_id AS "budgetSubjectId",
+		a.money AS "money",
+		a.years AS "years",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		o2.name AS "office.name"
+	</sql>
+	
+	<sql id="oaDepartmentBudgetJoins">
+		LEFT JOIN sys_office o2 ON o2.id = a.office_id
+	</sql>
+    
+	<select id="get" resultType="OaDepartmentBudget">
+		SELECT 
+			<include refid="oaDepartmentBudgetColumns"/>
+		FROM oa_department_budget a
+		<include refid="oaDepartmentBudgetJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OaDepartmentBudget">
+		SELECT 
+			<include refid="oaDepartmentBudgetColumns"/>
+		FROM oa_department_budget a
+		<include refid="oaDepartmentBudgetJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="office != null and office.id != null and office.id != ''">
+				AND a.office_id = #{office.id}
+			</if>
+			<if test="budgetSubjectId != null and budgetSubjectId != ''">
+				AND a.budget_subject_id = #{budgetSubjectId}
+			</if>
+			<if test="years != null and years != ''">
+				AND a.years = #{years}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OaDepartmentBudget">
+		SELECT 
+			<include refid="oaDepartmentBudgetColumns"/>
+		FROM oa_department_budget a
+		<include refid="oaDepartmentBudgetJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO oa_department_budget(
+			id,
+			office_id,
+			budget_subject_id,
+			money,
+			years,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{office.id},
+			#{budgetSubjectId},
+			#{money},
+			#{years},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE oa_department_budget SET 	
+			office_id = #{office.id},
+			budget_subject_id = #{budgetSubjectId},
+			money = #{money},
+			years = #{years},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE oa_department_budget SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

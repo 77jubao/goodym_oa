@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.goodym.java.modules.oa.dao.OaProjectBudgetDao">
+    
+	<sql id="oaProjectBudgetColumns">
+		a.id AS "id",
+		a.project_id AS "projectId",
+		a.budget_subject_id AS "budgetSubjectId",
+		a.money AS "money",
+		a.years AS "years",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="oaProjectBudgetJoins">
+	</sql>
+    
+	<select id="get" resultType="OaProjectBudget">
+		SELECT 
+			<include refid="oaProjectBudgetColumns"/>
+		FROM oa_project_budget a
+		<include refid="oaProjectBudgetJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OaProjectBudget">
+		SELECT 
+			<include refid="oaProjectBudgetColumns"/>
+		FROM oa_project_budget a
+		<include refid="oaProjectBudgetJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OaProjectBudget">
+		SELECT 
+			<include refid="oaProjectBudgetColumns"/>
+		FROM oa_project_budget a
+		<include refid="oaProjectBudgetJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO oa_project_budget(
+			id,
+			project_id,
+			budget_subject_id,
+			money,
+			years,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{projectId},
+			#{budgetSubjectId},
+			#{money},
+			#{years},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE oa_project_budget SET 	
+			project_id = #{projectId},
+			budget_subject_id = #{budgetSubjectId},
+			money = #{money},
+			years = #{years},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE oa_project_budget SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
