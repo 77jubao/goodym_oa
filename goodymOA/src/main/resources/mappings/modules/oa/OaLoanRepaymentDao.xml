@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.goodym.java.modules.oa.dao.OaLoanRepaymentDao">
+    
+	<sql id="oaLoanRepaymentColumns">
+		a.id AS "id",
+		a.loan_no AS "loanNo",
+		a.loan_name AS "loanName",
+		a.loan_date AS "loanDate",
+		a.office_id AS "office.id",
+		a.loan_reason AS "loanReason",
+		a.money AS "money",
+		a.has_also_money AS "hasAlsoMoney",
+		a.reimbursement_offset AS "reimbursementOffset",
+		a.remaining_amount AS "remainingAmount",
+		a.loan_status AS "loanStatus",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		o5.name AS "office.name"
+	</sql>
+	
+	<sql id="oaLoanRepaymentJoins">
+		LEFT JOIN sys_user u3 ON u3.id = a.loan_name
+		LEFT JOIN sys_office o5 ON o5.id = a.office_id
+	</sql>
+    
+	<select id="get" resultType="OaLoanRepayment">
+		SELECT 
+			<include refid="oaLoanRepaymentColumns"/>
+		FROM oa_loan_repayment a
+		<include refid="oaLoanRepaymentJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OaLoanRepayment">
+		SELECT 
+			<include refid="oaLoanRepaymentColumns"/>
+		FROM oa_loan_repayment a
+		<include refid="oaLoanRepaymentJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="loanNo != null and loanNo != ''">
+				AND a.loan_no = #{loanNo}
+			</if>
+			<if test="loanName != null and loanName != ''">
+				AND a.loan_name = #{loanName}
+			</if>
+			<if test="office != null and office.id != null and office.id != ''">
+				AND a.office_id = #{office.id}
+			</if>
+			<if test="loanStatus != null and loanStatus != ''">
+				AND a.loan_status = #{loanStatus}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OaLoanRepayment">
+		SELECT 
+			<include refid="oaLoanRepaymentColumns"/>
+		FROM oa_loan_repayment a
+		<include refid="oaLoanRepaymentJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO oa_loan_repayment(
+			id,
+			loan_no,
+			loan_name,
+			loan_date,
+			office_id,
+			loan_reason,
+			money,
+			has_also_money,
+			reimbursement_offset,
+			remaining_amount,
+			loan_status,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{loanNo},
+			#{loanName},
+			#{loanDate},
+			#{office.id},
+			#{loanReason},
+			#{money},
+			#{hasAlsoMoney},
+			#{reimbursementOffset},
+			#{remainingAmount},
+			#{loanStatus},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE oa_loan_repayment SET 	
+			loan_name = #{loanName},
+			loan_date = #{loanDate},
+			office_id = #{office.id},
+			loan_reason = #{loanReason},
+			money = #{money},
+			has_also_money = #{hasAlsoMoney},
+			reimbursement_offset = #{reimbursementOffset},
+			remaining_amount = #{remainingAmount},
+			loan_status = #{loanStatus},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE oa_loan_repayment SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
