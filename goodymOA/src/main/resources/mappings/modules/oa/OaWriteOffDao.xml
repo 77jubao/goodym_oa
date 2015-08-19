@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.goodym.java.modules.oa.dao.OaWriteOffDao">
+    
+	<sql id="oaWriteOffColumns">
+		a.id AS "id",
+		a.write_off_no AS "writeOffNo",
+		a.write_off_type AS "writeOffType",
+		a.name AS "name",
+		a.write_off_date AS "writeOffDate",
+		a.write_off_reason AS "writeOffReason",
+		a.office_id AS "office.id",
+		a.write_off_money AS "writeOffMoney",
+		a.write_off_status AS "writeOffStatus",
+		a.loan_no AS "loanNo",
+		a.loan_money AS "loanMoney",
+		a.subject_name AS "subjectName",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		o7.name AS "office.name"
+	</sql>
+	
+	<sql id="oaWriteOffJoins">
+		LEFT JOIN sys_user u4 ON u4.id = a.name
+		LEFT JOIN sys_office o7 ON o7.id = a.office_id
+	</sql>
+    
+	<select id="get" resultType="OaWriteOff">
+		SELECT 
+			<include refid="oaWriteOffColumns"/>
+		FROM oa_write_off a
+		<include refid="oaWriteOffJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OaWriteOff">
+		SELECT 
+			<include refid="oaWriteOffColumns"/>
+		FROM oa_write_off a
+		<include refid="oaWriteOffJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="writeOffNo != null and writeOffNo != ''">
+				AND a.write_off_no = #{writeOffNo}
+			</if>
+			<if test="writeOffType != null and writeOffType != ''">
+				AND a.write_off_type = #{writeOffType}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="office != null and office.id != null and office.id != ''">
+				AND a.office_id = #{office.id}
+			</if>
+			<if test="writeOffStatus != null and writeOffStatus != ''">
+				AND a.write_off_status = #{writeOffStatus}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OaWriteOff">
+		SELECT 
+			<include refid="oaWriteOffColumns"/>
+		FROM oa_write_off a
+		<include refid="oaWriteOffJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO oa_write_off(
+			id,
+			write_off_no,
+			write_off_type,
+			name,
+			write_off_date,
+			write_off_reason,
+			office_id,
+			write_off_money,
+			write_off_status,
+			loan_no,
+			loan_money,
+			subject_name,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{writeOffNo},
+			#{writeOffType},
+			#{name},
+			#{writeOffDate},
+			#{writeOffReason},
+			#{office.id},
+			#{writeOffMoney},
+			#{writeOffStatus},
+			#{loanNo},
+			#{loanMoney},
+			#{subjectName},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE oa_write_off SET 	
+			write_off_no = #{writeOffNo},
+			write_off_type = #{writeOffType},
+			name = #{name},
+			write_off_date = #{writeOffDate},
+			write_off_reason = #{writeOffReason},
+			office_id = #{office.id},
+			write_off_money = #{writeOffMoney},
+			write_off_status = #{writeOffStatus},
+			loan_no = #{loanNo},
+			loan_money = #{loanMoney},
+			subject_name = #{subjectName},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE oa_write_off SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
